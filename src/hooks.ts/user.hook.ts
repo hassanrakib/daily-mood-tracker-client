@@ -1,8 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/auth/auth.context";
 import { useMutation } from "@tanstack/react-query";
-import { logIn } from "../services/user.service";
-import { queryClient } from "@/main";
+import { logIn, registerUser } from "../services/user.service";
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -18,9 +17,12 @@ export const useAuth = () => {
 export const useLogin = () => {
   return useMutation({
     mutationFn: logIn,
-    onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-    },
+  });
+};
+
+// register user
+export const useRegisterUser = () => {
+  return useMutation({
+    mutationFn: registerUser,
   });
 };

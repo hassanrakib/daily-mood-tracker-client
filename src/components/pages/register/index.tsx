@@ -1,3 +1,5 @@
+import { PasswordInput } from "@/components/ui/password-input";
+import { useAuth, useRegisterUser } from "@/hooks.ts/user.hook";
 import {
   Button,
   Card,
@@ -8,27 +10,25 @@ import {
   Text,
   Link as ChakraLink,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-import { PasswordInput } from "../../ui/password-input";
-import { Link, useNavigate } from "react-router";
-import { useLogin, useAuth } from "@/hooks.ts/user.hook";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
 
 interface FormValues {
   phoneNumber: string;
   password: string;
 }
+
 // form default values
 const defaultValues: FormValues = {
   phoneNumber: "",
   password: "",
 };
 
-const Login = () => {
+const Register = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<FormValues>({ defaultValues });
 
@@ -38,22 +38,20 @@ const Login = () => {
   // get the auth context
   const auth = useAuth();
 
-  // login function
+  // register function
   const {
-    mutate: login,
+    mutate: registerUser,
     data: session,
-    isSuccess: isLoginSuccess,
-  } = useLogin();
+    isSuccess: isRegistrationSuccess,
+  } = useRegisterUser();
 
   const onSubmit = handleSubmit((data) => {
-    login(data);
+    registerUser(data);
   });
 
   useEffect(() => {
-    // after successful login
-    if (isLoginSuccess) {
-      // reset the form
-      reset(defaultValues);
+    // after successful registration
+    if (isRegistrationSuccess) {
       // set the session to the local storage
       localStorage.setItem("session", JSON.stringify(session));
 
@@ -62,14 +60,16 @@ const Login = () => {
 
       navigate("/", { replace: true });
     }
-  }, [session, isLoginSuccess, navigate, auth, reset]);
+  }, [session, isRegistrationSuccess, navigate, auth]);
 
   return (
     <Center minH="100dvh">
       <Card.Root maxW="sm" w="full">
         <Card.Header>
-          <Card.Title>Login</Card.Title>
-          <Card.Description>Fill in the form below to log in</Card.Description>
+          <Card.Title>Register</Card.Title>
+          <Card.Description>
+            Fill in the form below to register
+          </Card.Description>
         </Card.Header>
         <form onSubmit={onSubmit}>
           <Card.Body>
@@ -89,12 +89,12 @@ const Login = () => {
           </Card.Body>
           <Card.Footer flexDirection="column" alignItems="stretch">
             <Button type="submit" variant="solid">
-              Sign in
+              Register
             </Button>
             <Text fontSize="sm">
-              New user? Create an{" "}
+              Already a user?{" "}
               <ChakraLink variant="underline" asChild>
-                <Link to="/register">account</Link>
+                <Link to="/login">login</Link>
               </ChakraLink>
             </Text>
           </Card.Footer>
@@ -104,4 +104,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
