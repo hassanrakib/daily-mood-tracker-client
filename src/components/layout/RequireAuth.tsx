@@ -1,23 +1,14 @@
-import { Navigate } from "react-router";
-import { useUser } from "../../hooks.ts/user.hook";
+import { Navigate, Outlet } from "react-router";
+import { useAuth } from "../../hooks.ts/user.hook";
 
-export default function RequireAuth({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  // get the user from the context
-  const user = useUser();
+export default function RequireAuth() {
+  // get the auth from the context
+  const auth = useAuth();
 
-  //   if user loading
-  if (user.loading) {
-    return <p>Loading...</p>;
+  // if no session
+  if (!auth.session) {
+    return <Navigate to="/login" replace={true} />;
   }
 
-  // if no user
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
-  return children;
+  return <Outlet />;
 }

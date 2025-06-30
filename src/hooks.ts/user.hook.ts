@@ -1,22 +1,26 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/auth/auth.context";
-import { useQuery } from "@tanstack/react-query";
-import { getCurrentUser } from "../services/user.service";
+import { useMutation } from "@tanstack/react-query";
+import { logIn } from "../services/user.service";
+import { queryClient } from "@/main";
 
-export const useUser = () => {
+export const useAuth = () => {
   const context = useContext(AuthContext);
 
   if (context === undefined) {
-    throw new Error("useUser must be called inside the AuthProvider");
+    throw new Error("useAuth must be called inside the AuthProvider");
   }
 
   return context;
 };
 
-// get current user
-export const useGetCurrentUser = () => {
-  return useQuery({
-    queryKey: ["user"],
-    queryFn: getCurrentUser,
+// login user
+export const useLogin = () => {
+  return useMutation({
+    mutationFn: logIn,
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+    },
   });
 };

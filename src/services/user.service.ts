@@ -1,10 +1,12 @@
 import { AxiosInstance } from "../lib/AxiosInstance";
 import type Response from "../types/response.type";
-import { type User } from "../types/user.type";
+import { type LoginCredentials, type SessionPayload} from "../types/user.type";
 
-export const getCurrentUser = async () => {
+export const logIn = async (loginCredentials: LoginCredentials) => {
   try {
-    const { data } = await AxiosInstance.get<Response<User>>("/users/me");
+    const { data } = await AxiosInstance.post<
+      Response<SessionPayload>
+    >("/users/login", loginCredentials);
 
     // if success response
     if (data.data) {

@@ -1,32 +1,23 @@
-import { useEffect, useState, type ReactNode } from "react";
-import type { User } from "../../types/user.type";
+import { useState, type ReactNode } from "react";
 import { AuthContext } from "./auth.context";
-import { useGetCurrentUser } from "../../hooks.ts/user.hook";
+import type { SessionPayload } from "@/types/user.type";
 
 // AuthContext provider component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  let initialSession: SessionPayload | null = null;
 
-  // get current user
-  const { data: currentUser } = useGetCurrentUser();
+  // get the session from local storage
+  const sessionStringified = localStorage.getItem("session");
 
-  useEffect(() => {
-    // set loading to true
-    setLoading(true);
-    // set user
-    if (currentUser) {
-      setUser(currentUser);
-    } else {
-      setUser(null);
-    }
+  // if stringified session found
+  if (sessionStringified) {
+    initialSession = JSON.parse(sessionStringified);
+  }
 
-    // finally set loading
-    setLoading(false);
-  }, [loading, currentUser]);
+  const [session, setSession] = useState<SessionPayload | null>(initialSession);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, setLoading }}>
+    <AuthContext.Provider value={{ session, setSession }}>
       {children}
     </AuthContext.Provider>
   );

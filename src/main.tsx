@@ -8,11 +8,12 @@ import { Provider as ChakraProvider } from "./components/ui/provider";
 
 // tanstack query
 // Create a client
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ChakraProvider>
+    {/* don't system specific color theme */}
+    <ChakraProvider enableSystem={false}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <RouterProvider router={router} />
