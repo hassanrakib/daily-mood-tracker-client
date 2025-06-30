@@ -1,5 +1,7 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "../../hooks.ts/user.hook";
+import { Grid } from "@chakra-ui/react";
+import Navbar from "../shared/navbar";
 
 export default function RequireAuth() {
   // get the auth from the context
@@ -10,5 +12,10 @@ export default function RequireAuth() {
     return <Navigate to="/login" replace={true} />;
   }
 
-  return <Outlet />;
+  return (
+    <Grid px="3" py="5" gap="4" maxW="xl" mx="auto" templateRows="50px 1fr">
+      <Navbar />
+      <Outlet />
+    </Grid>
+  );
 }

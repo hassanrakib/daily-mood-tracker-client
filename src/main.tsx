@@ -5,6 +5,7 @@ import router from "./routes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./contexts/auth/auth.provider";
 import { Provider as ChakraProvider } from "./components/ui/provider";
+import { Toaster } from "./components/ui/toaster";
 
 // tanstack query
 // Create a client
@@ -16,6 +17,7 @@ createRoot(document.getElementById("root")!).render(
     <ChakraProvider enableSystem={false}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
+          <Toaster />
           <RouterProvider router={router} />
         </AuthProvider>
       </QueryClientProvider>
